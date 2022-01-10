@@ -4,8 +4,16 @@ import {
 	SearchIcon,
 	ShoppingCartIcon
 } from '@heroicons/react/outline';
+import { signIn, signOut, useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
+import { selectItems } from '../slices/basketSlice';
 
 function Header() {
+	const { data: session } = useSession();
+	const router = useRouter();
+	const items = useSelector(selectItems);
+
 	return (
 		<header className='sticky top-0 z-50'>
 			{/* Top nav */}
@@ -13,6 +21,7 @@ function Header() {
 				{/* Left */}
 				<div className='mt-2 flex items-center flex-grow sm:flex-grow-0'>
 					<Image
+						onClick={() => router.push('/')}
 						src='https://links.papareact.com/f90'
 						width={150}
 						height={40}
@@ -29,7 +38,7 @@ function Header() {
 				>
 					<input
 						className='p-2 h-full flex-grow focus:outline-none rounded-l-md 
-            flex-shrink-0 px-4'
+            flex-shrink px-4'
 						type='text'
 					/>
 					<SearchIcon className='h-12 p-4' />
@@ -40,8 +49,12 @@ function Header() {
 					className='text-white flex items-center text-xs whitespace-nowrap
          space-x-6 mx-6'
 				>
-					<div className='link'>
-						<p>Hello Mustaneer Haider</p>
+					<div onClick={!session ? signIn : signOut} className='link'>
+						<p>
+							{session
+								? `Hello, ${session.user.name}`
+								: 'Sign In'}
+						</p>
 						<p className='font-extrabold md:text-sm'>
 							Account & Lists
 						</p>
@@ -52,12 +65,15 @@ function Header() {
 						<p className='font-extrabold md:text-sm'>& Orders</p>
 					</div>
 
-					<div className='relative link flex items-center'>
+					<div
+						onClick={() => router.push('/checkout')}
+						className='relative link flex items-center'
+					>
 						<span
 							className='absolute top-0 right-0 md:right-10 h-4 w-4 bg-yellow-400
             text-center text-black font-bold rounded-full'
 						>
-							0
+							{items.length}
 						</span>
 						<ShoppingCartIcon className='h-10' />
 						<p className='hidden md:inline-flex font-extrabold md:text-sm mt-2'>
