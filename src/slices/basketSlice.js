@@ -14,11 +14,10 @@ const basketSlice = createSlice({
 			);
 			const newBasket = [...state.items];
 
-			let newQty = 1;
 			if (index >= 0) {
-				newBasket[index].quantity += newQty;
+				newBasket[index].quantity++;
 			} else {
-				const product = { ...action.payload, quantity: newQty };
+				const product = { ...action.payload, quantity: 1 };
 				newBasket.push(product);
 			}
 
@@ -35,7 +34,7 @@ const basketSlice = createSlice({
 			);
 
 			const newBasket = [...state.items];
-			newBasket[index].quantity += 1;
+			newBasket[index].quantity++;
 
 			state.items = newBasket;
 		},
@@ -48,7 +47,7 @@ const basketSlice = createSlice({
 			if (newBasket[index].quantity === 1) {
 				newBasket.splice(index, 1);
 			} else {
-				newBasket[index].quantity -= 1;
+				newBasket[index].quantity--;
 			}
 
 			state.items = newBasket;
